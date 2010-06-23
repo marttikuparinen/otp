@@ -159,9 +159,9 @@ static void morecore(unsigned int alloc_bytes)
     map_start = mmap(map_hint, map_bytes,
 		     PROT_EXEC|PROT_READ|PROT_WRITE,
 		     MAP_PRIVATE|MAP_ANONYMOUS
-#if defined(MAP_32BIT)
+#if defined(MAP_32BIT) && !defined(MMAP_MAP_FIXED)
 		     |MAP_32BIT
-#elif defined(__FreeBSD__) || defined(__sun__)
+#elif defined(MMAP_MAP_FIXED)
 		     |MAP_FIXED
 #endif
 		     ,

@@ -131,8 +131,10 @@ static void morecore(unsigned int alloc_bytes)
     map_start = mmap(map_hint, map_bytes,
 		     PROT_EXEC|PROT_READ|PROT_WRITE,
 		     MAP_PRIVATE|MAP_ANONYMOUS
-#ifdef __x86_64__
+#if defined(__x86_64__) && defined(MAP_32BIT) && !defined(MMAP_MAP_FIXED)
 		     |MAP_32BIT
+#elif defined(MMAP_MAP_FIXED)
+		     | MAP_FIXED
 #endif
 		     ,
 		     -1, 0);

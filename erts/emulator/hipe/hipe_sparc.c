@@ -130,6 +130,10 @@ static void atexit_alloc_code_stats(void)
 #define ALLOC_CODE_STATS(X)	do{}while(0)
 #endif
 
+#if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
+#define MAP_ANONYMOUS MAP_ANON
+#endif
+
 static void morecore(unsigned int alloc_bytes)
 {
     unsigned int map_bytes;
@@ -153,8 +157,8 @@ static void morecore(unsigned int alloc_bytes)
     map_start = mmap(map_hint, map_bytes,
 		     PROT_EXEC|PROT_READ|PROT_WRITE,
 		     MAP_PRIVATE|MAP_ANONYMOUS
-#ifdef __x86_64__
-		     |MAP_32BIT
+#if defined(MMAP_MAP_FIXED)
+		     | MAP_FIXED
 #endif
 		     ,
 		     -1, 0);

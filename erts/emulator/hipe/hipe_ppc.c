@@ -119,7 +119,11 @@ static void *new_code_mapping(void)
 	map_hint = (char*)(512*1024*1024); /* 0.5GB */
     map_start = mmap(map_hint, SEGMENT_NRBYTES,
 		     PROT_EXEC|PROT_READ|PROT_WRITE,
-		     MAP_PRIVATE|MAP_ANONYMOUS,
+		     MAP_PRIVATE|MAP_ANONYMOUS
+#ifdef MMAP_MAP_FIXED
+		     | MAP_FIXED
+#endif
+		     ,
 		     -1, 0);
     if (map_start != MAP_FAILED &&
 	(((unsigned long)map_start + (SEGMENT_NRBYTES-1)) & ~0x7FFFFFFFUL)) {
@@ -133,7 +137,11 @@ static void *new_code_mapping(void)
 {
     return mmap(0, SEGMENT_NRBYTES,
 		PROT_EXEC|PROT_READ|PROT_WRITE,
-		MAP_PRIVATE|MAP_ANONYMOUS,
+		MAP_PRIVATE|MAP_ANONYMOUS
+#ifdef MMAP_MAP_FIXED
+		| MAP_FIXED
+#endif
+		,
 		-1, 0);
 }
 #endif

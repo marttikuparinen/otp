@@ -73,11 +73,19 @@ static struct segment {
 #define in_area(ptr,start,nbytes)	\
 	((unsigned long)((char*)(ptr) - (char*)(start)) < (nbytes))
 
+#if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
+#define MAP_ANONYOUS MAP_ANON
+#endif
+
 static void *new_code_mapping(void)
 {
     return mmap(0, SEGMENT_NRBYTES,
 		PROT_EXEC|PROT_READ|PROT_WRITE,
-		MAP_PRIVATE|MAP_ANONYMOUS,
+		MAP_PRIVATE|MAP_ANONYMOUS
+#ifdef MMAP_MAP_FIXED
+		| MAP_FIXED
+#endif
+		,
 		-1, 0);
 }
 
